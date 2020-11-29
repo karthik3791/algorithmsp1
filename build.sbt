@@ -18,6 +18,7 @@ lazy val compilerOptions = Seq(
 
 lazy val commonSettings = Seq(
   scalacOptions ++= compilerOptions,
+  EclipseKeys.withSource := true,
   resolvers ++= Seq(
     "Local Maven Repository" at "file://" + Path.userHome.absolutePath + "/.m2/repository",
     Resolver.sonatypeRepo("releases"),
@@ -32,8 +33,7 @@ lazy val root = project
   .settings(commonSettings)
   .aggregate(
     common,
-    week1,
-    week2
+    week1
   )
 
 lazy val common = project
@@ -45,15 +45,6 @@ lazy val common = project
 lazy val week1 = project
   .settings(
     name := "week1",
-    commonSettings
-  )
-  .dependsOn(
-    common
-  )
-
-lazy val week2 = project
-  .settings(
-    name := "week2",
     commonSettings
   )
   .dependsOn(
