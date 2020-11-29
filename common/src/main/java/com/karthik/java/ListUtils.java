@@ -49,10 +49,10 @@ public class ListUtils {
 			return low;
 		} else {
 			int mid = (low + high) / 2;
-			if (bitonicArray[mid] > bitonicArray[low] && bitonicArray[mid] > bitonicArray[mid - 1]) {
+			if (bitonicArray[mid] > bitonicArray[mid - 1]) {
 				return findIndexWithMaxOnBitonicArray(bitonicArray, mid, high);
 			} else {
-				return findIndexWithMaxOnBitonicArray(bitonicArray, low, mid);
+				return findIndexWithMaxOnBitonicArray(bitonicArray, low, mid - 1);
 			}
 		}
 	}
