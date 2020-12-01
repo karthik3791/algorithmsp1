@@ -20,8 +20,9 @@ public class PercolationStats {
 		if (n <= 0 || trials <= 0)
 			throw new IllegalArgumentException("Invalid Input for PercolationStats");
 		gridSize = n;
-		openSiteFractionList = new double[gridSize];
+		openSiteFractionList = new double[trials];
 		T = trials;
+		runSimulation();
 	}
 
 	public void runSimulation() {
@@ -64,7 +65,6 @@ public class PercolationStats {
 		int n = Integer.parseInt(args[0]);
 		int trials = Integer.parseInt(args[1]);
 		PercolationStats pstats = new PercolationStats(n, trials);
-		pstats.runSimulation();
 		System.out.println("mean                    = " + pstats.mean());
 		System.out.println("stddev                  = " + pstats.stddev());
 		System.out.println("95% confidence interval = [" + pstats.confidenceLo() + ", " + pstats.confidenceHi() + "]");
