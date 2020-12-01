@@ -9,8 +9,10 @@ public class Percolation {
 	private static final Logger logger = LoggerFactory.getLogger(Percolation.class);
 	private int gridSize;
 	private int quwStoreSize;
+	private int quw2StoreSize;
 	private boolean[][] siteOpenStatus;
 	protected WeightedQuickUnionUF quw;
+	protected WeightedQuickUnionUF quw2;
 	private int noOfOpenSites = 0;
 
 	// creates n-by-n grid, with all sites initially blocked
@@ -20,8 +22,10 @@ public class Percolation {
 		}
 		gridSize = n;
 		quwStoreSize = (n * n) + 2; // 2 additional for the virtual sites to connect Top and Bottom Rows.
+		quw2StoreSize = (n * n) + 1;
 		initializeSiteOpenStatusMap();
 		initializeQUWStore();
+		initializeQUW2Store();
 	}
 
 	private void initializeSiteOpenStatusMap() {
@@ -41,6 +45,13 @@ public class Percolation {
 		}
 	}
 
+	private void initializeQUW2Store() {
+		quw2 = new WeightedQuickUnionUF(quw2StoreSize);
+		for (int j = 0; j < gridSize; j++) {
+			quw2.union(0, getQUWFromSiteIndex(0, j));
+		}
+	}
+
 	protected int getQUWFromSiteIndex(int siteRowIndex, int siteColIndex) {
 		return (siteRowIndex * gridSize) + (siteColIndex + 1);
 	}
@@ -54,20 +65,24 @@ public class Percolation {
 		if (row < 1 || row > gridSize || col < 1 || col > gridSize) {
 			throw new IllegalArgumentException("Invalid input for row and col");
 		}
-		siteOpenStatus[row - 1][col - 1] = true;
-		noOfOpenSites++;
-		connectWithOpenAdjacentSites(row - 1, col - 1);
+		if (!siteOpenStatus[row - 1][col - 1]) {
+			siteOpenStatus[row - 1][col - 1] = true;
+			noOfOpenSites++;
+			connectWithOpenAdjacentSites(row - 1, col - 1);
+		}
 	}
 
 	private void connectWithOpenAdjacentSites(int i, int j) {
 		for (int k = i - 1; k <= i + 1; k++) {
 			if (k >= 0 && k < gridSize && siteOpenStatus[k][j]) {
 				quw.union(getQUWFromSiteIndex(i, j), getQUWFromSiteIndex(k, j));
+				quw2.union(getQUWFromSiteIndex(i, j), getQUWFromSiteIndex(k, j));
 			}
 		}
 		for (int k = j - 1; k <= j + 1; k++) {
 			if (k >= 0 && k < gridSize && siteOpenStatus[i][k]) {
 				quw.union(getQUWFromSiteIndex(i, j), getQUWFromSiteIndex(i, k));
+				quw2.union(getQUWFromSiteIndex(i, j), getQUWFromSiteIndex(i, k));
 			}
 		}
 	}
@@ -85,7 +100,7 @@ public class Percolation {
 		if (row < 1 || row > gridSize || col < 1 || col > gridSize) {
 			throw new IllegalArgumentException("Invalid input for row and col");
 		}
-		return quw.find(0) == quw.find(getQUWFromSiteRowCol(row, col));
+		return isOpen(row, col) && quw2.find(0) == quw2.find(getQUWFromSiteRowCol(row, col));
 	}
 
 	// returns the number of open sites
@@ -95,7 +110,7 @@ public class Percolation {
 
 	// does the system percolate?
 	public boolean percolates() {
-		return quw.find(0) == quw.find(quwStoreSize - 1);
+		return (((gridSize == 1 && noOfOpenSites == 1) || gridSize != 1) && quw.find(0) == quw.find(quwStoreSize - 1));
 
 	}
 
