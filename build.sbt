@@ -48,5 +48,5 @@ lazy val week1 = project
     commonSettings
   )
   .dependsOn(
-    common
+    common % "test->test;compile->compile"
   )
