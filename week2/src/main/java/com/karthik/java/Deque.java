@@ -26,7 +26,7 @@ public class Deque<Item> implements Iterable<Item> {
 
 		@Override
 		public boolean hasNext() {
-			return !isEmpty() && ((current != first) || a-- == 1);
+			return current != null;
 		}
 
 		@Override
@@ -64,15 +64,14 @@ public class Deque<Item> implements Iterable<Item> {
 		Node<Item> newNode = new Node<>();
 		newNode.item = item;
 		if (isEmpty()) {
-			newNode.next = newNode;
-			newNode.prev = newNode;
+			newNode.next = null;
+			newNode.prev = null;
 			first = newNode;
 			last = newNode;
 		} else {
 			newNode.next = first;
-			newNode.prev = last;
+			newNode.prev = null;
 			first.prev = newNode;
-			last.next = newNode;
 			first = newNode;
 		}
 		size++;
@@ -83,14 +82,13 @@ public class Deque<Item> implements Iterable<Item> {
 		Node<Item> newNode = new Node<>();
 		newNode.item = item;
 		if (isEmpty()) {
-			newNode.next = newNode;
-			newNode.prev = newNode;
+			newNode.next = null;
+			newNode.prev = null;
 			first = newNode;
 			last = newNode;
 		} else {
-			newNode.next = first;
+			newNode.next = null;
 			newNode.prev = last;
-			first.prev = newNode;
 			last.next = newNode;
 			last = newNode;
 		}
@@ -104,8 +102,7 @@ public class Deque<Item> implements Iterable<Item> {
 			first = null;
 			last = null;
 		} else {
-			first.next.prev = last;
-			last.next = first.next;
+			first.next.prev = null;
 			first = first.next;
 		}
 		size--;
@@ -119,8 +116,7 @@ public class Deque<Item> implements Iterable<Item> {
 			first = null;
 			last = null;
 		} else {
-			last.prev.next = first;
-			first.prev = last.prev;
+			last.prev.next = null;
 			last = last.prev;
 		}
 		size--;
