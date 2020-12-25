@@ -9,19 +9,19 @@ public class Deque<Item> implements Iterable<Item> {
 	private Node<Item> last;
 
 	// helper linked list class
-	private class Node<Item> {
+	private static class Node<Item> {
 		private Item item;
 		private Node<Item> next;
 		private Node<Item> prev;
 
 	}
 
-	private class DequeIterator implements Iterator<Item> {
+	private static class DequeIterator<Item> implements Iterator<Item> {
 		private Node<Item> current;
 		private int a = 1;
 
-		public DequeIterator() {
-			current = first;
+		public DequeIterator(Deque<Item> d) {
+			current = d.first;
 		}
 
 		@Override
@@ -56,7 +56,7 @@ public class Deque<Item> implements Iterable<Item> {
 
 	@Override
 	public Iterator<Item> iterator() {
-		return new DequeIterator();
+		return new DequeIterator(this);
 	}
 
 	public void addFirst(Item item) {
