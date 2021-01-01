@@ -31,6 +31,9 @@ public class Deque<Item> implements Iterable<Item> {
 
 		@Override
 		public Item next() {
+			if (current == null) {
+				throw new java.util.NoSuchElementException("Iterator has been exhausted.");
+			}
 			Item i = current.item;
 			current = current.next;
 			return i;

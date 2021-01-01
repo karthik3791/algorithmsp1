@@ -34,6 +34,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 
 		@Override
 		public Item next() {
+			if (currentElementIndex == randomItemsToIterate.length) {
+				throw new java.util.NoSuchElementException("Iterator has been exhausted.");
+			}
 			return randomItemsToIterate[currentElementIndex++];
 		}
 
@@ -60,11 +63,9 @@ public class RandomizedQueue<Item> implements Iterable<Item> {
 	public RandomizedQueue() {
 		size = 0;
 		items = (Item[]) new Object[1];
-		System.out.println("Initial Items Length : " + items.length);
 	}
 
 	public void enqueue(Item item) {
-		System.out.println("Adding item : " + item);
 		itemNonNullCheck(item);
 		if (items.length == size) {
 			resizeArray(items.length * 2);
