@@ -34,7 +34,8 @@ lazy val root = project
   .aggregate(
     common,
     week1,
-    week2
+    week2,
+    week3
   )
 
 lazy val common = project
@@ -60,3 +61,13 @@ lazy val week2 = project
   .dependsOn(
     common % "test->test;compile->compile"
   )  
+
+lazy val week3 = project
+  .settings(
+    name := "week3",
+    commonSettings
+  )
+  .dependsOn(
+    common % "test->test;compile->compile"
+  )  
+
