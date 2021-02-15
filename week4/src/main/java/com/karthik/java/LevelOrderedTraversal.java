@@ -40,7 +40,8 @@ public class LevelOrderedTraversal {
 
 	public static void main(String[] args) {
 		Integer[] nodeArray = { 3, 9, 20, null, null, 15, 7 };
-		TreeNode root = TreeUtils.convertToTree(nodeArray);
+		TreeNode root = TreeUtils.convertLevelOrderedInputToTree(nodeArray);
+		TreeUtils.inOrderPrint(root);
 		List<List<Integer>> res = new LevelOrderedTraversal().levelOrder(root);
 		System.out.println("Result : " + res);
 	}

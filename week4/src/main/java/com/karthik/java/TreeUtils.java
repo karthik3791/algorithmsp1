@@ -1,15 +1,20 @@
 package com.karthik.java;
 
 public class TreeUtils {
-	private static TreeNode addTreeNodes(Integer[] nodeArray, int index) {
+
+	private static TreeNode convertedLevelOrderedInputToTree(Integer[] nodeArray, int index) {
 		if (index >= 0 && index < nodeArray.length && nodeArray[index] != null) {
 			TreeNode tNode = new TreeNode(nodeArray[index]);
-			tNode.left = addTreeNodes(nodeArray, 2 * index);
-			tNode.right = addTreeNodes(nodeArray, 2 * index + 1);
+			tNode.left = convertedLevelOrderedInputToTree(nodeArray, 2 * index + 1);
+			tNode.right = convertedLevelOrderedInputToTree(nodeArray, 2 * index + 2);
 			return tNode;
 		} else
 			return null;
 
+	}
+
+	public static TreeNode convertLevelOrderedInputToTree(Integer[] inputArray) {
+		return convertedLevelOrderedInputToTree(inputArray, 0);
 	}
 
 	public static void inOrderPrint(TreeNode root) {
@@ -18,18 +23,14 @@ public class TreeUtils {
 			System.out.println(root.val);
 			inOrderPrint(root.right);
 		}
-
 	}
 
-	public static TreeNode convertToTree(Integer[] inputArray) {
-		Integer[] nodeArray = new Integer[inputArray.length + 1];
-		for (int i = 0; i < inputArray.length; i++) {
-			nodeArray[i + 1] = inputArray[i];
+	public static void preOrderPrint(TreeNode root) {
+		if (root != null) {
+			System.out.println(root.val);
+			preOrderPrint(root.left);
+			preOrderPrint(root.right);
 		}
-		TreeNode root = addTreeNodes(nodeArray, 1);
-		System.out.println("In order Traversal of Tree : - ");
-		inOrderPrint(root);
-		return root;
 	}
 
 }
