@@ -2,7 +2,6 @@ package com.karthik.java;
 
 import java.util.ArrayList;
 import java.util.List;
-import edu.princeton.cs.algs4.StdRandom;
 
 public class Board {
 
@@ -79,12 +78,6 @@ public class Board {
 				if (board[i][j] != goalBoard[i][j] && board[i][j] != 0) {
 					int expectedI = (board[i][j] % n == 0) ? (board[i][j] / n) - 1 : (board[i][j] / n);
 					int expectedJ = (board[i][j] % n == 0) ? n - 1 : (board[i][j] % n) - 1;
-					// System.out.println("Manhattan Count for " + board[i][j]);
-					// System.out.println("Expected i : " + expectedI + " Expected j : " +
-					// expectedJ);
-					// System.out.println("Actual i : " + i + " Actual j : " + j);
-					// System.out.printf("Manhattan Count : %d \n", Math.abs(expectedI - i) +
-					// Math.abs(expectedJ - j));
 					manhattanCount += Math.abs(expectedI - i) + Math.abs(expectedJ - j);
 				}
 			}
@@ -108,7 +101,7 @@ public class Board {
 
 	// does this board equal y?
 	public boolean equals(Object y) {
-		boolean res = y.getClass() == this.getClass();
+		boolean res = y != null && (y.getClass() == this.getClass());
 		if (res) {
 			Board otherBoard = (Board) y;
 			res = res && this.dimension() == otherBoard.dimension();
@@ -142,7 +135,6 @@ public class Board {
 		for (int i = zeroi - 1; i <= zeroi + 1; i += 2) {
 			if (i >= 0 && i <= n - 1) {
 				Board neighbourBoard = new Board(board);
-				// TODO: Not immutable. Consider making it immutable.
 				int t = neighbourBoard.board[i][zeroj];
 				neighbourBoard.board[i][zeroj] = 0;
 				neighbourBoard.board[zeroi][zeroj] = t;
@@ -152,7 +144,6 @@ public class Board {
 		for (int j = zeroj - 1; j <= zeroj + 1; j += 2) {
 			if (j >= 0 && j <= n - 1) {
 				Board neighbourBoard = new Board(board);
-				// TODO: Not immutable. Consider making it immutable.
 				int t = neighbourBoard.board[zeroi][j];
 				neighbourBoard.board[zeroi][j] = 0;
 				neighbourBoard.board[zeroi][zeroj] = t;
@@ -165,42 +156,43 @@ public class Board {
 	// a board that is obtained by exchanging any pair of tiles
 	public Board twin() {
 		Board twinboard = new Board(board);
-		int i1 = StdRandom.uniform(n);
-		int i2 = i1;
-		do {
-			i2 = StdRandom.uniform(n);
-		} while (i2 == i1);
-		// TODO: Not immutable. Consider making it immutable.
-		// System.out.println("Swapping : " + twinboard.board[i1][i1] + " with " +
-		// twinboard.board[i2][i2]);
-		int t = twinboard.board[i1][i1];
-		twinboard.board[i1][i1] = twinboard.board[i2][i2];
-		twinboard.board[i2][i2] = t;
+		int j1 = 0;
+		int i1 = 0;
+		while (j1 < n && (twinboard.board[i1][j1] == 0 || twinboard.board[i1 + 1][j1] == 0)) {
+			j1++;
+		}
+		int t = twinboard.board[i1][j1];
+		twinboard.board[i1][j1] = twinboard.board[i1 + 1][j1];
+		twinboard.board[i1 + 1][j1] = t;
 		return twinboard;
 	}
 
 	// unit testing (not graded)
-	public static void printStuff(Board b) {
+	private static void printStuff(Board b) {
 		System.out.println("Board : \n" + b);
 		System.out.println("Goal Board : \n" + b.goalBoard());
 		System.out.println("Twin Board : \n" + b.twin());
-		System.out.println("Original Board Hamming : " + b.hamming());
-		System.out.println("Original Board Manhattan : " + b.manhattan());
+		System.out.println("Board Hamming : " + b.hamming());
+		System.out.println("Board Manhattan : " + b.manhattan());
 		for (Board neighbourBoard : b.neighbors()) {
 			System.out.println("Neighbour Board : \n" + neighbourBoard);
 		}
 		System.out.println("Is Goal : " + b.isGoal());
+		System.out.println("Board After All Operations : \n" + b);
 		System.out.println("================");
 	}
 
 	public static void main(String[] args) {
 		int[][] board1 = { { 1, 0, 3 }, { 4, 2, 5 }, { 7, 8, 6 } };
 		int[][] board2 = { { 8, 1, 3 }, { 4, 0, 2 }, { 7, 6, 5 } };
+		int[][] board3 = { { 0, 3 }, { 2, 1 } };
 		Board b1 = new Board(board1);
 		Board b2 = new Board(board2);
+		Board b3 = new Board(board3);
 		printStuff(b1);
 		printStuff(b2);
 		System.out.println("Equality Check : " + b1.equals(b1));
+		// System.out.println("B3 Twin : " + b3.twin());
 	}
 
 }
