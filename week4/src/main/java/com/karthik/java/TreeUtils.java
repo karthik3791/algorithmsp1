@@ -1,20 +1,39 @@
 package com.karthik.java;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class TreeUtils {
 
-	private static TreeNode convertedLevelOrderedInputToTree(Integer[] nodeArray, int index) {
-		if (index >= 0 && index < nodeArray.length && nodeArray[index] != null) {
-			TreeNode tNode = new TreeNode(nodeArray[index]);
-			tNode.left = convertedLevelOrderedInputToTree(nodeArray, 2 * index + 1);
-			tNode.right = convertedLevelOrderedInputToTree(nodeArray, 2 * index + 2);
-			return tNode;
-		} else
+	public static TreeNode convertLevelOrderedInputToTree(Integer[] nodeArray) {
+		Integer rootVal = nodeArray[0];
+		if (rootVal == null) {
 			return null;
-
-	}
-
-	public static TreeNode convertLevelOrderedInputToTree(Integer[] inputArray) {
-		return convertedLevelOrderedInputToTree(inputArray, 0);
+		}
+		TreeNode root = new TreeNode(rootVal);
+		Queue<TreeNode> q = new LinkedList<>();
+		q.add(root);
+		int i = 1;
+		while (!q.isEmpty() && i < nodeArray.length) {
+			TreeNode node = q.poll();
+			if (node != null) {
+				TreeNode left = null;
+				if (nodeArray[i] != null) {
+					left = new TreeNode(nodeArray[i]);
+				}
+				node.left = left;
+				q.offer(left);
+				i++;
+				TreeNode right = null;
+				if (nodeArray[i] != null) {
+					right = new TreeNode(nodeArray[i]);
+				}
+				node.right = right;
+				q.offer(right);
+				i++;
+			}
+		}
+		return root;
 	}
 
 	public static void inOrderPrint(TreeNode root) {
@@ -30,6 +49,14 @@ public class TreeUtils {
 			System.out.println(root.val);
 			preOrderPrint(root.left);
 			preOrderPrint(root.right);
+		}
+	}
+
+	public static void postOrderPrint(TreeNode root) {
+		if (root != null) {
+			postOrderPrint(root.left);
+			postOrderPrint(root.right);
+			System.out.println(root.val);
 		}
 	}
 

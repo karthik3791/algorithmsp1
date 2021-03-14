@@ -1,28 +1,25 @@
 package com.karthik.java;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import edu.princeton.cs.algs4.In;
 import edu.princeton.cs.algs4.MinPQ;
+import edu.princeton.cs.algs4.Stack;
 import edu.princeton.cs.algs4.StdOut;
 
 public class Solver {
 
-	private Integer noOfMoves = 0;
 	private boolean solvable;
-	private List<Board> solution;
+	private SearchNode lastNode;
 
 	private class SearchNode implements Comparable<SearchNode> {
 		private Board board;
 		private Integer noOfMoves;
-		private Board prevBoard;
+		private SearchNode prevSearchNode;
 		private Integer priority;
 
-		public SearchNode(Board board, Board prevBoard, Integer noOfMoves) {
+		public SearchNode(Board board, SearchNode prevSearchNode, Integer noOfMoves) {
 			this.board = board;
 			this.noOfMoves = noOfMoves;
-			this.prevBoard = prevBoard;
+			this.prevSearchNode = prevSearchNode;
 			this.priority = board.manhattan() + noOfMoves;
 		}
 
@@ -36,62 +33,50 @@ public class Solver {
 	public Solver(Board initial) {
 		if (initial == null)
 			throw new IllegalArgumentException();
-		List<Board> solutionAttempt = solveTheDamnBoard(initial, initial.twin());
-		// System.out.println("Solution Size : " + solutionAttempt.size());
-		if (solutionAttempt.size() > 0) {
-			solvable = true;
-			solution = solutionAttempt;
-			noOfMoves = solutionAttempt.size() - 1;
-		} else {
-			solvable = false;
-			solution = null;
-			noOfMoves = -1;
-		}
+		solveTheDamnBoard(initial, initial.twin());
 	}
 
-	private List<Board> solveTheDamnBoard(Board initialBoard, Board twinBoard) {
-		List<Board> solutionSteps = new ArrayList<>();
-		List<Board> twinSolutionSteps = new ArrayList<>();
-		boolean solved = false;
+	private void solveTheDamnBoard(Board initialBoard, Board twinBoard) {
 		MinPQ<SearchNode> initialBoardPq = new MinPQ<>();
-		MinPQ<SearchNode> twinBoardPq = new MinPQ<>();
 		initialBoardPq.insert(new SearchNode(initialBoard, null, 0));
+		MinPQ<SearchNode> twinBoardPq = new MinPQ<>();
 		twinBoardPq.insert(new SearchNode(twinBoard, null, 0));
 		while (!initialBoardPq.isEmpty() && !twinBoardPq.isEmpty()) {
 			SearchNode curNode = initialBoardPq.delMin();
 			SearchNode curTwinNode = twinBoardPq.delMin();
-			System.out.println("Current Move No. " + curNode.noOfMoves);
-			System.out.println("Current Board " + curNode.board);
-
-			System.out.println("Current Twin Move No. " + curTwinNode.noOfMoves);
-			System.out.println("Current Twin Board " + curTwinNode.board);
-			solutionSteps.add(curNode.board);
-			twinSolutionSteps.add(curTwinNode.board);
+			System.out.println("Current Node (No. of Moves) : " + curNode.noOfMoves);
+			System.out.println(curNode.board);
+			System.out.println("Current Twin Node (No. of Moves) : " + curTwinNode.noOfMoves);
+			System.out.println(curTwinNode.board);
 			if (curNode.board.isGoal()) {
-				solved = true;
+				solvable = true;
+				lastNode = curNode;
 				break;
 			}
 			if (curTwinNode.board.isGoal()) {
+				solvable = false;
 				break;
 			}
-			initialBoardPq = new MinPQ<>();
-			twinBoardPq = new MinPQ<>();
 			for (Board neighbour : curNode.board.neighbors()) {
-				if (!solutionSteps.contains(neighbour)) {
-					System.out.println("Adding Neighbour..");
+				if (curNode.prevSearchNode == null || !neighbour.equals(curNode.prevSearchNode.board)) {
+					SearchNode neighbourNode = new SearchNode(neighbour, curNode, curNode.noOfMoves + 1);
+					System.out.println("Adding Neighbour with Priority : " + neighbourNode.priority + " (Manhattan : "
+							+ neighbour.manhattan() + ", No.of Moves : " + neighbourNode.noOfMoves + ")");
 					System.out.println(neighbour);
-					initialBoardPq.insert(new SearchNode(neighbour, curNode.board, curNode.noOfMoves + 1));
+					initialBoardPq.insert(neighbourNode);
 				}
 			}
 			for (Board neighbour : curTwinNode.board.neighbors()) {
-				if (!twinSolutionSteps.contains(neighbour)) {
-					System.out.println("Adding Neighbour for Twin..");
+				if (curTwinNode.prevSearchNode == null || !neighbour.equals(curTwinNode.prevSearchNode.board)) {
+					SearchNode neighbourNode = new SearchNode(neighbour, curTwinNode, curTwinNode.noOfMoves + 1);
+					System.out.println(
+							"Adding Neighbour of Twin with Priority : " + neighbourNode.priority + " (Manhattan : "
+									+ neighbour.manhattan() + ", No.of Moves : " + neighbourNode.noOfMoves + ")");
 					System.out.println(neighbour);
-					twinBoardPq.insert(new SearchNode(neighbour, curTwinNode.board, curTwinNode.noOfMoves + 1));
+					twinBoardPq.insert(neighbourNode);
 				}
 			}
 		}
-		return (solved == true) ? solutionSteps : new ArrayList<Board>();
 	}
 
 	// is the initial board solvable? (see below)
@@ -103,14 +88,20 @@ public class Solver {
 	public int moves() {
 		if (!isSolvable())
 			return -1;
-		return noOfMoves;
+		return lastNode.noOfMoves;
 	}
 
 	// sequence of boards in a shortest solution; null if unsolvable
 	public Iterable<Board> solution() {
 		if (!isSolvable())
 			return null;
-		return solution;
+		Stack<Board> boardStack = new Stack<>();
+		SearchNode curNode = lastNode;
+		while (curNode != null) {
+			boardStack.push(curNode.board);
+			curNode = curNode.prevSearchNode;
+		}
+		return boardStack;
 	}
 
 	public static void main(String[] args) {
