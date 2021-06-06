@@ -18,14 +18,14 @@ public class TreeUtils {
 			TreeNode node = q.poll();
 			if (node != null) {
 				TreeNode left = null;
-				if (nodeArray[i] != null) {
+				if (i < nodeArray.length && nodeArray[i] != null) {
 					left = new TreeNode(nodeArray[i]);
 				}
 				node.left = left;
 				q.offer(left);
 				i++;
 				TreeNode right = null;
-				if (nodeArray[i] != null) {
+				if (i < nodeArray.length && nodeArray[i] != null) {
 					right = new TreeNode(nodeArray[i]);
 				}
 				node.right = right;
