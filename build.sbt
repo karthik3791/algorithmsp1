@@ -36,16 +36,17 @@ lazy val root = project
     week1,
     week2,
     week3,
-    week4
+    week4,
+    week5
   )
 
-lazy val common = project
+lazy val common = (project in file("common"))
   .settings(
     name := "common",
     commonSettings
   )
 
-lazy val week1 = project
+lazy val week1 = (project in file("week1"))
   .settings(
     name := "week1",
     commonSettings
@@ -54,7 +55,7 @@ lazy val week1 = project
     common % "test->test;compile->compile"
   )
 
-lazy val week2 = project
+lazy val week2 = (project in file("week2"))
   .settings(
     name := "week2",
     commonSettings
@@ -63,7 +64,7 @@ lazy val week2 = project
     common % "test->test;compile->compile"
   )  
 
-lazy val week3 = project
+lazy val week3 = (project in file("week3"))
   .settings(
     name := "week3",
     commonSettings
@@ -72,7 +73,7 @@ lazy val week3 = project
     common % "test->test;compile->compile"
   )  
 
-lazy val week4 = project
+lazy val week4 = (project in file("week4"))
   .settings(
     name := "week4",
     commonSettings
@@ -81,3 +82,20 @@ lazy val week4 = project
     common % "test->test;compile->compile"
   )    
 
+lazy val week5 = (project in file("week5"))
+  .settings(
+    name := "week5",
+    commonSettings
+  )
+  .dependsOn(
+    common % "test->test;compile->compile"
+  )    
+
+  lazy val week6 = (project in file("week6"))
+  .settings(
+    name := "week6",
+    commonSettings
+  )
+  .dependsOn(
+    common % "test->test;compile->compile"
+  )    
