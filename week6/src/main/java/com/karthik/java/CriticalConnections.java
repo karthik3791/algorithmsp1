@@ -166,46 +166,6 @@ public class CriticalConnections {
 		}
 	}
 
-	public static class ConnectedComponents {
-		private int count;
-		private int[] id;
-		private boolean[] marked;
-
-		public ConnectedComponents(Graph G) {
-			count = 0;
-			id = new int[G.V()];
-			marked = new boolean[G.V()];
-			for (int v = 0; v < G.V(); v++) {
-				if (!marked[v]) {
-					dfs(G, v);
-					count++;
-				}
-			}
-		}
-
-		private void dfs(Graph G, int v) {
-			marked[v] = true;
-			id[v] = count;
-			for (int w : G.adj(v)) {
-				if (!marked[w] && !networkBroken()) {
-					dfs(G, w);
-				}
-			}
-		}
-
-		public boolean connected(int v, int w) {
-			return id[v] == id[w];
-		}
-
-		public int getCount() {
-			return count;
-		}
-
-		public boolean networkBroken() {
-			return count > 1;
-		}
-	}
-
 	private List<List<Integer>> criticalConnections(Graph G) {
 		DepthFirstDirectedPaths dfs = new DepthFirstDirectedPaths(G, 0);
 		BreadthFirstDirectedPaths bfs = new BreadthFirstDirectedPaths(G, 0);
@@ -230,7 +190,6 @@ public class CriticalConnections {
 						otherNodesLinkedToV.add(y);
 				}
 			}
-			//System.out.println("Other Nodes Linked to V " + v + " : " + otherNodesLinkedToV);
 			if (otherNodesLinkedToV.size() == 0)
 				finalResult.add(edgePair);
 			else {
@@ -249,7 +208,6 @@ public class CriticalConnections {
 					System.out.println("Checking if there is a path from w :" + w + " to X : " + x);
 
 					for (int j = x; j != v; j = dfs.edgeTo[j]) {
-						// System.out.println("Current J : " + j);
 						if (j == w) {
 							System.out.println("Found DFS Path from W :" + w + " to X : " + x);
 							System.out.println("Eliminating Edge [" + v + "," + w + "]");
@@ -277,37 +235,6 @@ public class CriticalConnections {
 		}
 		DepthFirstDirectedPaths dfs = new DepthFirstDirectedPaths(G, 0);
 		return criticalConnections(G);
-	}
-
-	public List<List<Integer>> criticalConnections2(int n, List<List<Integer>> connections) {
-		int V = n;
-		Graph G = new Graph(V);
-		for (List<Integer> edgePair : connections) {
-			G.addEdge(edgePair.get(0), edgePair.get(1));
-		}
-
-		DepthFirstDirectedPaths dfs = new DepthFirstDirectedPaths(G, 0);
-		BreadthFirstDirectedPaths bfs = new BreadthFirstDirectedPaths(G, 0);
-
-		List<List<Integer>> possibleConnections = new ArrayList<>();
-		for (int v = 1; v < G.V(); v++) {
-			if (dfs.edgeTo[v] == bfs.edgeTo[v]) {
-				int dfsX = dfs.edgeTo[v];
-				if ((dfs.edgeTo[v] == 0 && G.degree(v) == 1) || (dfs.edgeTo[v] != 0
-						&& possibleConnections.contains(Arrays.asList(dfsX, dfs.edgeTo[dfsX])) == false
-						&& possibleConnections.contains(Arrays.asList(dfsX, bfs.edgeTo[dfsX])) == false)) {
-					possibleConnections.add(Arrays.asList(v, dfs.edgeTo[v]));
-				}
-			}
-		}
-
-		return possibleConnections.stream().filter(edgePair -> {
-			G.removeEdge(edgePair.get(0), edgePair.get(1));
-			int ccCount = new ConnectedComponents(G).getCount();
-			G.addEdge(edgePair.get(0), edgePair.get(1));
-			return ccCount > 1;
-		}).collect(Collectors.toList());
-
 	}
 
 	private static void otherTest() {
