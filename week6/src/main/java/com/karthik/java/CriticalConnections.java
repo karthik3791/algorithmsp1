@@ -169,7 +169,6 @@ public class CriticalConnections {
 	private List<List<Integer>> criticalConnections(Graph G) {
 		DepthFirstDirectedPaths dfs = new DepthFirstDirectedPaths(G, 0);
 		BreadthFirstDirectedPaths bfs = new BreadthFirstDirectedPaths(G, 0);
-
 		List<List<Integer>> possibleConnections = new ArrayList<>();
 		for (int v = 1; v < G.V(); v++) {
 			if (dfs.edgeTo[v] == bfs.edgeTo[v]) {

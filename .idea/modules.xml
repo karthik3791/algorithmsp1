@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/algorithmsp1.iml" filepath="$PROJECT_DIR$/.idea/modules/algorithmsp1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/algorithmsp1-build.iml" filepath="$PROJECT_DIR$/.idea/modules/algorithmsp1-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/common.iml" filepath="$PROJECT_DIR$/.idea/modules/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/week1.iml" filepath="$PROJECT_DIR$/.idea/modules/week1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/week2.iml" filepath="$PROJECT_DIR$/.idea/modules/week2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/week3.iml" filepath="$PROJECT_DIR$/.idea/modules/week3.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/week4.iml" filepath="$PROJECT_DIR$/.idea/modules/week4.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/week5.iml" filepath="$PROJECT_DIR$/.idea/modules/week5.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/week6.iml" filepath="$PROJECT_DIR$/.idea/modules/week6.iml" />
+    </modules>
+  </component>
+</project>
