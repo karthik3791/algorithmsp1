@@ -16,8 +16,7 @@ public class CandyCrush1D {
 
     public String crush(String input, int k) {
         Stack<CharCount> st = new Stack<>();
-        for (int i = 0; i < input.length(); ) {
-            if (st.isEmpty() || !st.peek().c.equals(input.charAt(i))) {
+        for (int i = 0; i < input.length(); ) {            if (st.isEmpty() || !st.peek().c.equals(input.charAt(i))) {
                 if (!st.isEmpty() && st.peek().count >= k)
                     st.pop();
                 else {

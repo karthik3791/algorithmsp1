@@ -98,4 +98,13 @@ lazy val week5 = (project in file("week5"))
   )
   .dependsOn(
     common % "test->test;compile->compile"
+  ) 
+   
+  lazy val grind2 = (project in file("grind2"))
+  .settings(
+    name := "grind2",
+    commonSettings
+  )
+  .dependsOn(
+    common % "test->test;compile->compile"
   )    
